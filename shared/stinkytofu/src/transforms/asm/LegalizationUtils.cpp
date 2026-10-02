@@ -29,6 +29,7 @@
 
 #include "stinkytofu/hardware/ArchHelper.hpp"
 #include "stinkytofu/hardware/GfxIsa.hpp"
+#include "stinkytofu/ir/asm/ReadWriteOperands.hpp"
 #include "stinkytofu/ir/asm/RegisterKey.hpp"
 #include "stinkytofu/ir/asm/StinkyAsmIR.hpp"
 #include "stinkytofu/ir/asm/StinkyModifiers.hpp"
@@ -615,7 +616,7 @@ void legalizeReadWriteSources(StinkyInstruction* inst) {
     for (const HwInstDesc::OperandFieldDesc& field : desc->operandFields) {
         if (!field.isDest) continue;
         const size_t slot = destSlot++;
-        if (!field.isReadWrite) continue;
+        if (!readsDestination(*inst, slot)) continue;
         if (slot >= inst->getDestRegs().size()) continue;
 
         // By value: addSrcReg can reallocate the dest vector's neighbour, and a

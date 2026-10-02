@@ -169,10 +169,10 @@ class AllocationConstraints {
     /// Values written through a field narrower than the register, whose result
     /// nothing reads.
     ///
-    /// Usually a missing RW: the write keeps the rest of the register, but the
-    /// table does not say so, so the kept value looks dead and loses its register
-    /// (the FP8 pack converts, before the fix). A truly dead narrow write lands
-    /// here too. Reported only; it constrains nothing.
+    /// Usually a read nobody saw: the write keeps the rest of the register, but
+    /// nothing said so, so the kept value looks dead and loses its register. A
+    /// genuinely dead narrow write lands here too. Reported only; it constrains
+    /// nothing.
     std::span<const SSAValueID> unreadPartialWrites() const {
         return unreadPartialWrites_;
     }
