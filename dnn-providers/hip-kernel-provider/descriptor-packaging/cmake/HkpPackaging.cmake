@@ -64,7 +64,8 @@ endfunction()
 #   stripping feature suffixes (gfx942:xnack-) and dropping anything that is not
 #   a concrete gfx name: a lowercase LLVM processor name, optionally hyphenated
 #   (gfx1250-strict), excluding generic targets (gfx11-generic), which no device
-#   reports. <out_source_var> receives the name of the variable the
+#   reports, and TheRock family names (gfx950-dcgpu, gfx906-dgpu, gfx90c-igpu,
+#   gfx950-all), which name several processors. <out_source_var> receives the name of the variable the
 #   targets came from, or empty when neither is set, so a caller can name it in a
 #   diagnostic. No intersection with a fixed fixture set: the tool compiles from
 #   authored sources for whatever arch is requested.
@@ -97,10 +98,12 @@ function(hkp_selected_arches out_var out_source_var)
         if(NOT _bare)
             continue()
         endif()
-        if(NOT _bare MATCHES "^gfx[0-9a-f]+(-[a-z]+)*$" OR _bare MATCHES "-generic$")
+        if(NOT _bare MATCHES "^gfx[0-9a-f]+(-[a-z]+)*$"
+           OR _bare MATCHES "-(generic|all|dcgpu|dgpu|igpu)$")
             message(WARNING
                 "hkp: ignoring '${_arch}' from ${_source}; it is not a concrete gfx "
-                "target (a family or generic name) and cannot be selected by a device. Nothing "
+                "target (a family or generic name) and cannot be selected by a device. "
+                "Nothing "
                 "is packed for it. Name real gfx architectures in ${_source} to pack "
                 "for them.")
             continue()

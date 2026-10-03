@@ -109,11 +109,12 @@ def validate_component(name: str) -> None:
 def gpu_short(gpu_family: str) -> str:
     """Short GPU name for build-dir naming.
 
-    A concrete target (e.g. ``gfx1250-strict``) is returned whole; a family name
-    (e.g. ``gfx94X-dcgpu``) is cut at its first hyphen.
+    A concrete target (e.g. ``gfx1250-strict``) is returned whole; a family or
+    generic name (e.g. ``gfx94X-dcgpu``, ``gfx950-dcgpu``, ``gfx11-generic``) is cut
+    at its first hyphen.
     """
-    if re.fullmatch(r"gfx[0-9a-f]+(-[a-z]+)*", gpu_family) and not gpu_family.endswith(
-        "-generic"
+    if re.fullmatch(r"gfx[0-9a-f]+(-[a-z]+)*", gpu_family) and not re.search(
+        r"-(generic|all|dcgpu|dgpu|igpu)$", gpu_family
     ):
         return gpu_family
     return gpu_family.split("-")[0]
