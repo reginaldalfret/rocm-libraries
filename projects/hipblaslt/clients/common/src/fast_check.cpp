@@ -1455,7 +1455,8 @@ namespace
                 m, batch_count, total_elements, expect_poison, d_counters.ptr, stream);
             break;
         default:
-            break;
+            // An unsupported type would otherwise scan nothing and look clean.
+            return hipErrorInvalidValue;
         }
         err = hipMemcpyAsync(
             counters, d_counters.ptr, sizeof(counters), hipMemcpyDeviceToHost, stream);
